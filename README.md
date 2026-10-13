@@ -1,4 +1,4 @@
-# CUAC — Lab Instrument Identifier
+# LABSTER
 
 Aplicación móvil Flutter que identifica instrumentos de laboratorio mediante
 un modelo TensorFlow Lite ejecutado completamente en el dispositivo.
