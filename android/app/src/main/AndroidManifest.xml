@@ -5,7 +5,7 @@
         android:required="true" />
 
     <application
-        android:label="CUAC"
+        android:label="Labster"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

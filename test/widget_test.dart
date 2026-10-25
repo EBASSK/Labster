@@ -29,9 +29,11 @@ void main() {
     );
     await tester.pump();
 
+    expect(
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).title, 'Labster');
     expect(find.byKey(const Key('splashLogo')), findsOneWidget);
     expect(find.byKey(const Key('splashProgress')), findsOneWidget);
-    expect(find.text('CUAC'), findsNothing);
+    expect(find.text('Labster'), findsNothing);
     expect(find.text('Preparando reconocimiento local'), findsNothing);
   });
 
@@ -119,7 +121,8 @@ void main() {
     expect(find.text('Historial'), findsNothing);
   });
 
-  testWidgets('ajustes adapta sus tarjetas al tema y muestra opciones de CUAC',
+  testWidgets(
+      'ajustes adapta sus tarjetas al tema y muestra opciones de Labster',
       (tester) async {
     await tester.pumpWidget(
       const ProviderScope(
@@ -147,11 +150,11 @@ void main() {
     expect(find.text('Términos y licencias'), findsOneWidget);
 
     await tester.scrollUntilVisible(
-      find.text('Acerca de CUAC'),
+      find.text('Acerca de Labster'),
       300,
       scrollable: find.byType(Scrollable),
     );
-    expect(find.text('Acerca de CUAC'), findsOneWidget);
+    expect(find.text('Acerca de Labster'), findsOneWidget);
   });
 
   testWidgets('historial recarga el filtro activo después de marcar favorito',

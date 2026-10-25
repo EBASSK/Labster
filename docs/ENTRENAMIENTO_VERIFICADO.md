@@ -1,5 +1,8 @@
 # Entrenamiento y verificación del modelo CUAC 2.0.0
 
+> Informe histórico del modelo que utiliza Labster (antes CUAC). La migración
+> de marca no modifica estos pesos ni las métricas registradas aquí.
+
 ## Resultado y límites
 
 Se entrenó MobileNetV2, se seleccionaron pesos por pérdida de validación y se

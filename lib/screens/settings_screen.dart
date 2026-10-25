@@ -12,7 +12,7 @@ import '../providers/palette_provider.dart';
 import '../config/app_palette.dart';
 import '../widgets/palette_options.dart';
 
-/// Centro de información y configuración de CUAC.
+/// Centro de información y configuración de Labster.
 ///
 /// Organiza en tarjetas la apariencia, el modelo, permisos, privacidad,
 /// detalles técnicos y licencias. La selección de tema se observa mediante
@@ -103,7 +103,7 @@ class SettingsScreen extends ConsumerWidget {
                     _SettingsCard(
                       palette: palette,
                       icon: Icons.info_outline,
-                      title: 'Acerca de CUAC',
+                      title: 'Acerca de Labster',
                       subtitle: 'Versión ${AppConfig.appVersion} · SENA',
                       onTap: () => _showAboutDialog(context),
                     ),

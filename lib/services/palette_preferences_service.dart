@@ -16,6 +16,7 @@ class PalettePreferencesService implements PalettePreferencesStore {
       : _directory = directory ?? getApplicationSupportDirectory;
   final Future<Directory> Function() _directory;
 
+  // Conserva el nombre usado antes de Labster para recuperar la paleta existente.
   Future<File> _file() async =>
       File(path.join((await _directory()).path, 'cuac_palette.txt'));
 

@@ -1,11 +1,11 @@
 {
-    "name": "CUAC - Lab Instrument Identifier",
-    "short_name": "CUAC",
+    "name": "Labster - Lab Instrument Identifier",
+    "short_name": "Labster",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#021017",
     "theme_color": "#2DD4BF",
-    "description": "Sistema inteligente CUAC para identificación de instrumentos de laboratorio.",
+    "description": "Sistema inteligente Labster para identificación de instrumentos de laboratorio.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

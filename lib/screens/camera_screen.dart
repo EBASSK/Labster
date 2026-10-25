@@ -134,7 +134,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     switch (code) {
       case 'CameraAccessDenied':
       case 'CameraAccessDeniedWithoutPrompt':
-        return 'CUAC necesita acceso a la cámara para identificar '
+        return 'Labster necesita acceso a la cámara para identificar '
             'instrumentos. Concede el permiso en los ajustes del dispositivo.';
       case 'CameraAccessRestricted':
         return 'El acceso a la cámara está restringido en este dispositivo. '

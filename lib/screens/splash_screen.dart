@@ -87,10 +87,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   /// recurso gráfico empaquetado.
   Widget _buildLogo({double size = 78}) {
     return Semantics(
-      label: 'CUAC',
+      label: 'Labster',
       image: true,
       child: Image.asset(
-        'assets/imagenes/cuac_logo.png',
+        'assets/imagenes/labster_logo.png',
         key: const Key('splashLogo'),
         width: size,
         height: size,
@@ -114,7 +114,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Widget _buildLoadingState() {
     return Semantics(
       key: const ValueKey('loading'),
-      label: 'CUAC, cargando',
+      label: 'Labster, cargando',
       liveRegion: true,
       child: SizedBox(
         width: 112,

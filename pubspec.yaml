@@ -1,5 +1,5 @@
 name: lab_instrument_identifier
-description: Identificador de instrumentos de laboratorio.
+description: Labster - Identificador de instrumentos de laboratorio.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -37,4 +37,4 @@ flutter:
     - assets/models/instrument_model.tflite
     - assets/models/labels.txt
     - assets/models/model_contract.json
-    - assets/imagenes/cuac_logo.png
+    - assets/imagenes/labster_logo.png

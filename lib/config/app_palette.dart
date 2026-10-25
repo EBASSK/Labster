@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Paletas independientes del modo claro/oscuro. Los identificadores se guardan
 /// como texto para que añadir opciones no cambie las preferencias existentes.
 enum AppPalette {
-  original('original', 'CUAC original', [
+  original('original', 'Labster original', [
     Color(0xFF111827),
     Color(0xFF2563EB),
     Color(0xFF10B981),
@@ -32,7 +32,7 @@ enum AppPalette {
   /// Cinco tonos de las referencias, ordenados del más oscuro al más claro.
   final List<Color> colors;
 
-  /// Una preferencia desconocida conserva la apariencia original de CUAC.
+  /// Una preferencia desconocida conserva la apariencia original de Labster.
   static AppPalette fromStorage(Object? value) => values.firstWhere(
         (palette) => palette.id == value,
         orElse: () => original,

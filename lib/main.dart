@@ -40,7 +40,7 @@ Future<void> main() async {
   );
 }
 
-/// Widget raíz de CUAC.
+/// Widget raíz de Labster.
 ///
 /// Conserva una única instancia del enrutador aunque cambie el tema. Así, una
 /// selección visual no reinicia la navegación ni devuelve al usuario al splash.

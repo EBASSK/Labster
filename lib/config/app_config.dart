@@ -1,4 +1,4 @@
-/// Fuente única de constantes funcionales y metadatos de CUAC.
+/// Fuente única de constantes funcionales y metadatos de Labster.
 ///
 /// La clase no puede instanciarse: sus valores son estáticos y se consultan
 /// desde servicios, almacenamiento y componentes de interfaz.
@@ -26,7 +26,7 @@ abstract final class AppConfig {
   static const int imageQuality = 85;
 
   // Metadatos mostrados al usuario en títulos y pantallas informativas.
-  static const String appName = 'CUAC';
+  static const String appName = 'Labster';
   static const String appVersion = '1.0.0';
   static const String appAuthor = 'EBASSK';
   static const String appDescription =

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_palette.dart';
 
-/// Sistema visual compartido por todas las pantallas de CUAC.
+/// Sistema visual compartido por todas las pantallas de Labster.
 ///
 /// Centralizar colores, tipografías, espaciados y sombras evita valores aislados
 /// en los widgets y mantiene coherencia entre los modos claro y oscuro.

@@ -1,11 +1,15 @@
-# CUAC — Lab Instrument Identifier
+# Labster — Lab Instrument Identifier
+
+Anteriormente llamado CUAC. La migración conserva los identificadores de
+instalación y las preferencias existentes. Consulta la
+[primera entrega y próximos pasos](docs/MIGRACION_LABSTER.md).
 
 Aplicación móvil Flutter que identifica instrumentos de laboratorio mediante
 un modelo TensorFlow Lite ejecutado completamente en el dispositivo.
 
 ## Paletas en Apariencia
 
-Ajustes → Apariencia permite elegir **CUAC original**, **Bruma invernal** u
+Ajustes → Apariencia permite elegir **Labster original**, **Bruma invernal** u
 **Océano profundo**, combinadas con Sistema, Claro u Oscuro. La selección se
 guarda localmente. Colores y responsabilidades: [documentación](docs/APARIENCIA.md).
 

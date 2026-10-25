@@ -23,6 +23,7 @@ abstract interface class ThemePreferencesStore {
 /// añadir una dependencia solo por un valor pequeño de configuración. El
 /// archivo no contiene información sensible ni sale del dispositivo.
 class ThemePreferencesService implements ThemePreferencesStore {
+  // El nombre histórico permite conservar el tema al actualizar a Labster.
   static const String _fileName = 'cuac_preferences.json';
   static const String _themeKey = 'themeMode';
 
