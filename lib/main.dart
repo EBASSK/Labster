@@ -5,6 +5,8 @@ import 'config/theme.dart';
 import 'config/app_config.dart';
 import 'models/scan_history.dart';
 import 'providers/theme_provider.dart';
+import 'providers/palette_provider.dart';
+import 'services/palette_preferences_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/camera_screen.dart';
 import 'screens/results_screen.dart';
@@ -20,6 +22,8 @@ Future<void> main() async {
   // muestre brevemente un tema distinto al que eligió el usuario.
   final themePreferences = ThemePreferencesService();
   final initialThemeMode = await themePreferences.loadThemeMode();
+  final palettePreferences = PalettePreferencesService();
+  final initialPalette = await palettePreferences.loadPalette();
 
   // ProviderScope crea el contenedor global donde Riverpod conserva y comparte
   // el estado de los servicios durante toda la ejecución de la aplicación.
@@ -28,6 +32,8 @@ Future<void> main() async {
       overrides: [
         themePreferencesStoreProvider.overrideWithValue(themePreferences),
         initialThemeModeProvider.overrideWithValue(initialThemeMode),
+        paletteStoreProvider.overrideWithValue(palettePreferences),
+        initialPaletteProvider.overrideWithValue(initialPalette),
       ],
       child: const MyApp(),
     ),
@@ -139,13 +145,14 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
+    final palette = ref.watch(paletteProvider);
 
     // MaterialApp.router enlaza GoRouter con Material 3 y aplica en tiempo real
     // el modo del sistema, claro u oscuro seleccionado desde Ajustes.
     return MaterialApp.router(
       title: AppConfig.appName,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.forPalette(palette, Brightness.light),
+      darkTheme: AppTheme.forPalette(palette, Brightness.dark),
       themeMode: themeMode,
       routerConfig: _router,
       debugShowCheckedModeBanner: false,

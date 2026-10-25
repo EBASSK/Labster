@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import shutil
 import subprocess
 import sys
@@ -50,14 +52,36 @@ def publish_runtime_artifacts() -> None:
     La operación verifica primero cada archivo obligatorio para no publicar una
     actualización incompleta que deje modelo y etiquetas desincronizados.
     """
-    RUNTIME_MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    for filename in REQUIRED_ARTIFACTS:
+    # La evidencia pertenece al binario exacto que se publica. Un entrenamiento
+    # fallido nunca puede reutilizar silenciosamente métricas de otro modelo.
+    metrics_path = ARTIFACTS_DIR / 'evaluation_metrics.json'
+    if not metrics_path.is_file():
+        raise RuntimeError('Faltan métricas verificadas; ejecuta el entrenamiento')
+    metrics = json.loads(metrics_path.read_text(encoding='utf-8'))
+    from preprocessing import PREPROCESSING
+    if metrics.get('preprocessing') != PREPROCESSING:
+        raise RuntimeError('El preprocesamiento no coincide con Flutter')
+    for filename, key in [('instrument_model.tflite', 'model_sha256'), ('labels.txt', 'labels_sha256')]:
         source = ARTIFACTS_DIR / filename
-        if not source.is_file():
-            raise RuntimeError(f'No se encontró el artefacto requerido: {source}')
-        destination = RUNTIME_MODEL_DIR / filename
-        shutil.copy2(source, destination)
-        print(f'Publicado: {destination.relative_to(PROJECT_ROOT)}')
+        if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != metrics.get(key):
+            raise RuntimeError(f'Artefacto ausente o no evaluado: {filename}')
+    parity = metrics.get('conversion_validation', {})
+    if parity.get('top1_agreement', 0) < 0.95 or parity.get('max_absolute_error', 1) > 0.03:
+        raise RuntimeError('La conversión no supera la paridad requerida')
+    RUNTIME_MODEL_DIR.mkdir(parents=True, exist_ok=True)
+    # Primero valida todos los archivos; después actualiza el par modelo/etiquetas.
+    for filename in REQUIRED_ARTIFACTS:
+        shutil.copy2(ARTIFACTS_DIR / filename, RUNTIME_MODEL_DIR / filename)
+        print(f'Publicado: {filename}')
+    (RUNTIME_MODEL_DIR / 'model_contract.json').write_text(json.dumps({
+        'preprocessing': PREPROCESSING,
+        'input_shape': [1, 224, 224, 3], 'output_shape': [1, 10],
+        'input_type': 'float32', 'output_type': 'float32',
+        'output_semantics': 'softmax_uncalibrated',
+        'model_sha256': metrics['model_sha256'],
+        'labels_sha256': metrics['labels_sha256'],
+        'generated_at': metrics['generated_at'],
+    }, indent=2), encoding='utf-8')
 
 
 def parse_args() -> argparse.Namespace:

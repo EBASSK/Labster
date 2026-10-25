@@ -1,0 +1,9 @@
+{
+  "selected_stage": "fine_tuning",
+  "preprocessing": "rgb8-bilinear-half-pixel-224-unit-v1",
+  "checkpoint_sha256": "d1be3056b1f5810ad1ced2ee2e256551a5c1adb4e8c13dcb75b9fb08f42aa840",
+  "split_sha256": "586dec54c251a91f8a980547b4aee506c4d9c2bb3b23d796ce14d1e5fd7355e1",
+  "recovered_after_export_failure": true,
+  "validation_loss_head": 0.23150977492332458,
+  "validation_loss_fine_tuning": 0.1686374694108963
+}

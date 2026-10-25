@@ -219,6 +219,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   }
 
   /// Construye el informe con la predicción principal y sus alternativas.
+  /// El aviso depende del umbral provisional de AppConfig; incluso un valor
+  /// alto puede ser incorrecto. Guardar conserva la sugerencia, no la valida.
   Widget _buildSuccessState(
     BuildContext context,
     List<Prediction> predictions,
@@ -254,8 +256,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                             Text(
                               topPrediction.confidence >=
                                       AppConfig.confidenceThreshold
-                                  ? 'Instrumento detectado'
-                                  : 'Resultado con baja confianza',
+                                  ? 'Instrumento sugerido'
+                                  : 'Identificación no concluyente',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             const SizedBox(height: 8),
@@ -324,7 +326,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                                       ),
                                 ),
                                 Text(
-                                  'Confianza',
+                                  'Puntuación',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall

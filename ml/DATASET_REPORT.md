@@ -31,7 +31,8 @@ dataset anterior y no debe considerarse una métrica de producción.
 3. Mantener un conjunto externo que nunca entre en entrenamiento.
 4. Revisar primero los 9 pares similares entre clases incluidos en
    `ml/artifacts/dataset_audit.json`.
-5. Reentrenar con Python 3.10–3.12 y revisar
+5. Reentrenar con el entorno fijado en `requirements.txt` y revisar
    `evaluation_metrics.json` y `confusion_matrix.png`.
 
-El modelo actualmente empaquetado no fue reemplazado durante esta auditoría.
+El modelo no se reemplazó durante aquella auditoría de julio. Fue reentrenado
+y publicado posteriormente; véase `../docs/ENTRENAMIENTO_VERIFICADO.md`.

@@ -113,7 +113,8 @@ class PredictionNotifier extends StateNotifier<PredictionState> {
         return;
       }
 
-      // El servicio adapta formato, tamaño y canales a la entrada del modelo.
+      // Aquí se leen bytes y, si pesan demasiado, se comprimen. La conversión
+      // a tensor RGB normalizado ocurre después, dentro de TFLiteService.
       final imageBytes = await imageProc.loadAndProcessImage(imagePath);
       if (imageBytes == null) {
         state = const PredictionState.error('No se pudo procesar la imagen');

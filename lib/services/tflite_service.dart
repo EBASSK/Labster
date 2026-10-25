@@ -29,8 +29,8 @@ class TFLiteService {
   final Logger _logger = Logger();
   final ModelImagePreprocessor _preprocessor = const ModelImagePreprocessor();
 
-  // Etiquetas en orden alfabético (coinciden con labels.txt y el modelo)
-  // IMPORTANTE: El orden DEBE coincidir con el modelo entrenado
+  // Respaldo informativo si falla la carga; no habilita la inferencia.
+  // El archivo de etiquetas es la fuente de orden durante una carga válida.
   static const List<String> _defaultLabels = [
     'Buretas', // Dosificación volumétrica (índice 0)
     'Crisoles', // Calentamiento y fusión (índice 1)
@@ -53,8 +53,8 @@ class TFLiteService {
   /// Indica si el modelo superó la carga y la validación de contrato.
   bool get isInitialized => _isInitialized;
 
-  /// Etiquetas asociadas, en orden, a las posiciones de salida del modelo.
-  List<String> get labels => _labels;
+  /// Copia no modificable de las etiquetas, en el orden del vector de salida.
+  List<String> get labels => List.unmodifiable(_labels);
 
   /// Inicializa TensorFlow Lite y comparte una inicialización que ya esté activa.
   ///
@@ -122,15 +122,22 @@ class TFLiteService {
   /// Comprueba el contrato crítico entre la aplicación y el archivo `.tflite`.
   ///
   /// La entrada debe ser un lote RGB `float32` del tamaño configurado y la
-  /// última dimensión de salida debe coincidir con el número de etiquetas.
+  /// salida debe ser `[1, número de etiquetas]` de tipo `float32`. Los modelos
+  /// con entrada o salida cuantizada se rechazan: no se aplican escalas ni puntos cero.
+  /// La forma no demuestra el orden semántico de las clases.
   void _validateModelContract() {
     final interpreter = _interpreter;
     if (interpreter == null) {
       throw StateError('El intérprete TFLite no está disponible');
     }
 
-    final inputTensor = interpreter.getInputTensors().first;
-    final outputTensor = interpreter.getOutputTensors().first;
+    final inputs = interpreter.getInputTensors();
+    final outputs = interpreter.getOutputTensors();
+    if (inputs.length != 1 || outputs.length != 1) {
+      throw StateError('Se requiere un modelo con una entrada y una salida');
+    }
+    final inputTensor = inputs.single;
+    final outputTensor = outputs.single;
     final expectedInputShape = [
       1,
       AppConfig.modelInputSize,
@@ -152,12 +159,15 @@ class TFLiteService {
       );
     }
 
-    if (outputTensor.shape.isEmpty ||
-        outputTensor.shape.last != _labels.length) {
+    if (!_sameShape(outputTensor.shape, [1, _labels.length])) {
       throw StateError(
         'El modelo produce ${outputTensor.shape} pero existen '
         '${_labels.length} etiquetas',
       );
+    }
+    if (outputTensor.type != TensorType.float32) {
+      throw StateError(
+          'Tipo de salida incompatible: ${outputTensor.type}; se esperaba float32');
     }
   }
 
@@ -170,27 +180,25 @@ class TFLiteService {
     return true;
   }
 
-  /// Carga y normaliza las etiquetas declaradas en los recursos de Flutter.
-  /// Si el recurso no está disponible, usa [_defaultLabels] y no interrumpe la
-  /// inicialización; la validación posterior confirmará si su cantidad coincide.
+  /// Lee las etiquetas sin ordenarlas: su posición identifica la neurona de salida.
+  ///
+  /// Propaga los errores del recurso y rechaza etiquetas vacías o duplicadas.
+  /// Una lista de respaldo de igual longitud podría asignar nombres incorrectos
+  /// a predicciones numéricamente válidas.
   Future<void> _loadLabels() async {
-    try {
-      final labelsContent = await rootBundle.loadString(AppConfig.labelsPath);
-      final labelsList = labelsContent.trim().split('\n');
-
-      // Convierte el formato técnico del archivo en nombres legibles.
-      _labels =
-          labelsList.map((label) => _capitalizeLabel(label.trim())).toList();
-
-      _logger.i('Etiquetas cargadas desde archivo: ${_labels.length}');
-      for (int i = 0; i < _labels.length; i++) {
-        _logger.d('  [$i] ${_labels[i]}');
-      }
-    } catch (e) {
-      _logger.w('No se pudieron cargar etiquetas desde archivo: $e');
-      _logger.i('Usando etiquetas por defecto');
-      _labels = _defaultLabels;
+    final content = await rootBundle.loadString(AppConfig.labelsPath);
+    final labels = content
+        .trim()
+        .split('\n')
+        .map((label) => _capitalizeLabel(label.trim()))
+        .toList();
+    if (labels.any((label) => label.isEmpty) ||
+        labels.toSet().length != labels.length) {
+      throw StateError(
+          'El archivo de etiquetas contiene clases vacías o duplicadas');
     }
+    _labels = labels;
+    _logger.i('Etiquetas cargadas desde archivo: ${_labels.length}');
   }
 
   /// Convierte una etiqueta técnica a estilo oración para mostrarla al usuario.
@@ -200,6 +208,8 @@ class TFLiteService {
   String _capitalizeLabel(String label) {
     final normalized = label.replaceAll('_', ' ').trim().toLowerCase();
     if (normalized.isEmpty) return normalized;
+    // Alias de presentación; conserva intacto el índice de la clase.
+    if (normalized == 'vasos precipitado') return 'Vasos de precipitado';
     return normalized[0].toUpperCase() + normalized.substring(1);
   }
 
@@ -252,7 +262,8 @@ class TFLiteService {
   ///
   /// Acepta probabilidades ya normalizadas o puntuaciones libres. En el segundo
   /// caso aplica softmax, limita cada confianza al intervalo válido y ordena de
-  /// mayor a menor. Lanza una excepción si el vector está vacío.
+  /// mayor a menor. Rechaza vectores vacíos, incompatibles o no finitos. Esta
+  /// heurística no comprueba que las puntuaciones sean probabilidades calibradas.
   List<PredictionResult> _processOutput(List<double> output) {
     try {
       final results = <PredictionResult>[];
@@ -263,11 +274,14 @@ class TFLiteService {
         _logger.d('  [$i] ${output[i]}');
       }
 
-      if (output.isEmpty) {
-        throw Exception('Output del modelo está vacío');
+      if (output.isEmpty ||
+          output.length != _labels.length ||
+          output.any((value) => !value.isFinite)) {
+        throw StateError('El modelo devolvió puntuaciones inválidas');
       }
 
-      // La suma y el rango revelan si la salida ya representa probabilidades.
+      // Compatibilidad con salidas normalizadas o logits; el rango y la suma
+      // por sí solos no certifican la semántica ni la calibración del modelo.
       final sum = output.fold<double>(0.0, (a, b) => a + b.abs());
       _logger.d('Suma de valores de confianza: $sum');
 
@@ -366,7 +380,7 @@ class PredictionResult {
   /// Nombre legible del instrumento identificado.
   final String label;
 
-  /// Probabilidad normalizada entre `0.0` y `1.0`.
+  /// Puntuación normalizada entre `0.0` y `1.0`, sin calibración comprobada.
   final double confidence;
 
   /// Posición de esta clase en el vector de salida del modelo.

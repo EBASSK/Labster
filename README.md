@@ -1,7 +1,23 @@
-# LABSTER
+# CUAC — Lab Instrument Identifier
 
 Aplicación móvil Flutter que identifica instrumentos de laboratorio mediante
 un modelo TensorFlow Lite ejecutado completamente en el dispositivo.
+
+## Paletas en Apariencia
+
+Ajustes → Apariencia permite elegir **CUAC original**, **Bruma invernal** u
+**Océano profundo**, combinadas con Sistema, Claro u Oscuro. La selección se
+guarda localmente. Colores y responsabilidades: [documentación](docs/APARIENCIA.md).
+
+## Modelo verificado 2.0.0
+
+El modelo fue reentrenado con 133 imágenes y preprocesamiento bilineal compartido
+entre Python y Dart. Resultado interno: 26/27 aciertos top 1 y 27/27 top 3.
+No demuestra mayor precisión que el modelo anterior ni fiabilidad en fotografías
+externas. La exportación usa pesos float16 y entrada/salida float32.
+
+Consulta [el informe reproducible](docs/ENTRENAMIENTO_VERIFICADO.md) para ver
+métricas, límites, errores conocidos y comandos de entrenamiento/verificación.
 
 ## Estado actual y cambios recientes
 
@@ -31,7 +47,7 @@ actualización visual orientada a dispositivos móviles reales:
   y mantener un arranque visualmente consistente.
 - Los consejos de precisión usan iconos Material y texto directo, sin emojis
   ni efectos de brillo decorativos.
-- La suite automatizada contiene 19 pruebas para preprocesamiento, splash,
+- La suite automatizada contiene 28 pruebas para preprocesamiento, splash,
   navegación, filtros vacíos, fallos de SQLite, persistencia de apariencia,
   estabilidad del enrutador y superficies claras u oscuras.
 
@@ -166,10 +182,11 @@ La imagen solo se copia al almacenamiento permanente cuando el usuario pulsa
 
 ## Pipeline de machine learning
 
-Se recomienda Python 3.10–3.12 en un entorno virtual dedicado.
+El entorno de entrenamiento verificado usa Python 3.13.5 en Windows (CPU).
+Las versiones utilizadas están fijadas en `ml/requirements.txt`.
 
 ```powershell
-python -m venv .venv-ml
+& "$env:LOCALAPPDATA/Programs/Python/Python313/python.exe" -m venv .venv-ml
 .venv-ml\Scripts\python -m pip install -r ml\requirements.txt
 .venv-ml\Scripts\python ml\dataset.py validate
 .venv-ml\Scripts\python ml\dataset.py audit

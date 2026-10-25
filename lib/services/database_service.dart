@@ -84,6 +84,9 @@ class DatabaseService {
   ///
   /// Las tres mejores predicciones se serializan como JSON dentro de una sola
   /// columna. Si ya existe el mismo ID, SQLite reemplaza el registro completo.
+  /// Guarda la ruta de la fotografía, no sus bytes; el coordinador copia el
+  /// archivo primero e intenta eliminar esa copia si falla SQLite.
+  /// Los errores de apertura o escritura se propagan al llamador.
   Future<String> insertScan(ScanHistory scan) async {
     final db = await database;
 
@@ -350,6 +353,8 @@ class DatabaseService {
 
   /// Reconstruye un [ScanHistory] y tolera JSON antiguo o dañado en el top 3.
   /// En ese caso conserva el escaneo y usa una lista de predicciones vacía.
+  /// Esta tolerancia solo cubre el top 3; una fecha o campo obligatorio inválido
+  /// todavía puede hacer fallar la consulta y activar el estado de error de UI.
   ScanHistory _mapToScanHistory(Map<String, dynamic> map) {
     final top3Json = map['top_3_predictions'] as String?;
     List<Prediction> predictions = [];

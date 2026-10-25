@@ -9,7 +9,8 @@ class Prediction {
   /// Etiqueta legible del instrumento, por ejemplo, «Microscopio».
   final String name;
 
-  /// Probabilidad normalizada entre 0.0 y 1.0 devuelta por el modelo.
+  /// Puntuación normalizada entre 0.0 y 1.0; no es una probabilidad de acierto
+  /// calibrada. Se conserva el nombre `confidence` por compatibilidad con SQLite.
   final double confidence;
 
   /// Agrupación funcional del instrumento, como «Óptica» o «Medición».
@@ -38,7 +39,8 @@ class Prediction {
 
   /// Traduce el valor numérico a un nivel de confianza comprensible.
   ///
-  /// Los umbrales mantienen consistente el mensaje visual en todas las pantallas.
+  /// Estos cortes pertenecen a este modelo de presentación; algunas pantallas
+  /// definen sus propios colores. No representan una validación estadística.
   ConfidenceLevel getConfidenceLevel() {
     if (confidence >= 0.8) {
       return ConfidenceLevel.high;

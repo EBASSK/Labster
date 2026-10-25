@@ -1,0 +1,19 @@
+{
+  "preprocessing": "rgb8-bilinear-half-pixel-224-unit-v1",
+  "input_shape": [
+    1,
+    224,
+    224,
+    3
+  ],
+  "output_shape": [
+    1,
+    10
+  ],
+  "input_type": "float32",
+  "output_type": "float32",
+  "output_semantics": "softmax_uncalibrated",
+  "model_sha256": "c33c19b4ec1e09a8f30b19bf24cee3c80892273da06f56b5419b7c46bc4ea094",
+  "labels_sha256": "f77fb22a7ba5d64e8f677817c0d8768d46e3c7652c15cbd69257a09ee9a74d46",
+  "generated_at": "2026-10-10T14:22:30.970114"
+}

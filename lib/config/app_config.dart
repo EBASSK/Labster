@@ -10,8 +10,9 @@ abstract final class AppConfig {
   // Ancho y alto esperados por la entrada cuadrada del modelo.
   static const int modelInputSize = 224;
   // Identifica la revisión del modelo, no la versión general de la aplicación.
-  static const String modelVersion = '1.0.0';
-  // Resultado mínimo aceptado como una identificación suficientemente fiable.
+  static const String modelVersion = '2.0.0';
+  // Umbral provisional de aviso en Resultados; no validado con un conjunto
+  // externo. No filtra las predicciones ni impide guardarlas en el historial.
   static const double confidenceThreshold = 0.5;
 
   // Nombre físico y versión del esquema de la base de datos SQLite local.

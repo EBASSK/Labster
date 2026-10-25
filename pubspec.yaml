@@ -36,4 +36,5 @@ flutter:
   assets:
     - assets/models/instrument_model.tflite
     - assets/models/labels.txt
+    - assets/models/model_contract.json
     - assets/imagenes/cuac_logo.png

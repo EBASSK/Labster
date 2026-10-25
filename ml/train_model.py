@@ -5,7 +5,11 @@ aprendizaje por transferencia con MobileNetV2 y produce los archivos que despué
 se publican en la aplicación Flutter.
 """
 
+import argparse
 import json
+import hashlib
+import platform
+from preprocessing import preprocess_image, PREPROCESSING
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -107,6 +111,7 @@ class DatasetLoader:
         self.classes = []
         self.class_to_idx = {}
         self.idx_to_class = {}
+        self.paths = []
 
     def load_dataset(self):
         """Carga imágenes normalizadas, etiquetas numéricas y división asignada.
@@ -120,13 +125,13 @@ class DatasetLoader:
         # Comprobar que la ruta del dataset existe
         if not self.dataset_path.exists():
             logger.error(f"Ruta de dataset no encontrada: {self.dataset_path}")
-            return None, None, None
+            raise RuntimeError('No se pudo cargar íntegramente el dataset')
         if not SPLIT_MANIFEST_PATH.is_file():
             logger.error(
                 'No existe split_manifest.json. Ejecuta primero '
                 'python ml/dataset.py audit'
             )
-            return None, None, None
+            raise RuntimeError('No se pudo cargar íntegramente el dataset')
 
         # El manifiesto es la fuente única para train, validation y test.
         manifest = json.loads(SPLIT_MANIFEST_PATH.read_text(encoding='utf-8'))
@@ -171,27 +176,18 @@ class DatasetLoader:
                             f"{manifest_item['class']} != {class_name}"
                         )
 
+                    if hashlib.sha256(img_file.read_bytes()).hexdigest() != manifest_item['sha256']:
+                        raise ValueError(f'La imagen cambió desde la auditoría: {manifest_path}')
                     with Image.open(img_file) as source_image:
-                        # Se aplica la orientación EXIF antes de redimensionar y
-                        # se normalizan los píxeles al intervalo [0, 1].
-                        rgb_image = ImageOps.exif_transpose(
-                            source_image.convert('RGB')
-                        )
-                        resized_image = rgb_image.resize(
-                            (self.img_size, self.img_size),
-                            Image.Resampling.LANCZOS,
-                        )
-                        img = np.asarray(
-                            resized_image,
-                            dtype=np.float32,
-                        ) / 255.0
+                        img = preprocess_image(source_image, self.img_size)
 
+                    self.paths.append(manifest_path)
                     images.append(img)
                     labels.append(idx)
                     splits.append(manifest_item['split'])
                     image_count += 1
                 except Exception as e:
-                    logger.warn(f"Error cargando {img_file}: {e}")
+                    raise RuntimeError(f"Error cargando {img_file}: {e}") from e
 
             logger.info(f"      → {image_count} imágenes cargadas")
 
@@ -203,7 +199,7 @@ class DatasetLoader:
 
         if len(X) == 0:
             logger.error("No se cargaron imágenes. Verifica el dataset.")
-            return None, None, None
+            raise RuntimeError('No se pudo cargar íntegramente el dataset')
 
         return X, y, split_names
 
@@ -319,7 +315,7 @@ class InstrumentModel:
             ),
             keras.callbacks.ModelCheckpoint(
                 OUTPUT_DIR / 'best_model.keras',
-                monitor='val_accuracy',
+                monitor='val_loss',
                 save_best_only=True,
                 verbose=1
             ),
@@ -334,7 +330,7 @@ class InstrumentModel:
             epochs=EPOCHS,
             batch_size=BATCH_SIZE,
             callbacks=callbacks,
-            verbose=1
+            verbose=2
         )
 
         logger.success("Entrenamiento completado")
@@ -377,7 +373,7 @@ class InstrumentModel:
             ),
             keras.callbacks.ModelCheckpoint(
                 OUTPUT_DIR / 'best_fine_tuned_model.keras',
-                monitor='val_accuracy',
+                monitor='val_loss',
                 save_best_only=True,
                 verbose=1,
             ),
@@ -389,7 +385,7 @@ class InstrumentModel:
             epochs=10,
             batch_size=BATCH_SIZE,
             callbacks=fine_tune_callbacks,
-            verbose=1
+            verbose=2
         )
 
         logger.success("Fine-tuning completado")
@@ -442,6 +438,9 @@ def export_to_tflite(model, output_path='instrument_model.tflite'):
     # manteniendo solo operaciones integradas compatibles con el runtime móvil.
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    # Pesos float16 con entrada/salida float32: evita la desviación observada
+    # al cuantizar pesos a enteros, sin cambiar el contrato de Flutter.
+    converter.target_spec.supported_types = [tf.float16]
     converter.target_spec.supported_ops = [
         tf.lite.OpsSet.TFLITE_BUILTINS
     ]
@@ -459,42 +458,39 @@ def export_to_tflite(model, output_path='instrument_model.tflite'):
     return output_path
 
 
-def evaluate_tflite(model_path, X_test, y_test):
-    """Comprueba que el modelo exportado mantiene la precisión de Keras.
-
-    La conversión puede cambiar tipos o cuantización. Por eso esta evaluación
-    consulta los tensores reales del intérprete y adapta entrada y salida antes
-    de comparar las clases predichas.
-    """
-    interpreter = tf.lite.Interpreter(model_path=str(model_path))
+def predict_tflite(model_path, images, num_classes):
+    """Ejecuta el mismo contrato float32 que Flutter y valida sus resultados."""
+    interpreter = tf.lite.Interpreter(model_path=str(model_path), num_threads=4)
     interpreter.allocate_tensors()
-    input_detail = interpreter.get_input_details()[0]
-    output_detail = interpreter.get_output_details()[0]
-    predictions = []
-
-    for image in X_test:
-        sample = np.expand_dims(image, axis=0)
-        # Si el convertidor cuantizó la entrada, se aplica su escala y punto cero.
-        if input_detail['dtype'] != np.float32:
-            scale, zero_point = input_detail['quantization']
-            sample = np.round(sample / scale + zero_point).astype(
-                input_detail['dtype']
-            )
-        else:
-            sample = sample.astype(np.float32)
-
-        interpreter.set_tensor(input_detail['index'], sample)
+    inputs, outputs = interpreter.get_input_details(), interpreter.get_output_details()
+    if len(inputs) != 1 or len(outputs) != 1:
+        raise RuntimeError('El modelo debe tener una entrada y una salida')
+    inp, out = inputs[0], outputs[0]
+    if list(inp['shape']) != [1, IMG_SIZE, IMG_SIZE, 3] or inp['dtype'] != np.float32:
+        raise RuntimeError('Entrada incompatible con Flutter')
+    if list(out['shape']) != [1, num_classes] or out['dtype'] != np.float32:
+        raise RuntimeError('Salida incompatible con Flutter')
+    scores = []
+    for image in images:
+        interpreter.set_tensor(inp['index'], image[None].astype(np.float32))
         interpreter.invoke()
-        output = interpreter.get_tensor(output_detail['index'])[0]
-        # La salida se devuelve a punto flotante antes de obtener el máximo.
-        if output_detail['dtype'] != np.float32:
-            scale, zero_point = output_detail['quantization']
-            output = (output.astype(np.float32) - zero_point) * scale
-        predictions.append(int(np.argmax(output)))
+        scores.append(interpreter.get_tensor(out['index'])[0].copy())
+    scores = np.asarray(scores)
+    if not np.isfinite(scores).all() or np.any(scores < 0) or not np.allclose(scores.sum(axis=1), 1, atol=1e-4):
+        raise RuntimeError('El modelo exportado no produce puntuaciones softmax válidas')
+    return scores
 
-    accuracy = float(np.mean(np.asarray(predictions) == y_test))
-    logger.info(f'Accuracy TFLite: {accuracy:.4f} ({accuracy * 100:.2f}%)')
-    return accuracy
+
+def score_predictions(scores, labels, class_names):
+    """Métricas y ejemplos conservados para inspeccionar errores por clase."""
+    predicted = scores.argmax(axis=1)
+    return {
+        'accuracy': float(np.mean(predicted == labels)),
+        'top3_accuracy': float(np.mean([label in row for label, row in zip(labels, np.argsort(scores, axis=1)[:, -3:])])),
+        'classification_report': classification_report(labels, predicted, labels=list(range(len(class_names))), target_names=class_names, output_dict=True, zero_division=0),
+        'confusion_matrix': confusion_matrix(labels, predicted, labels=list(range(len(class_names)))).tolist(),
+        'samples': [{'real': class_names[int(label)], 'predicted': class_names[int(pred)], 'score': float(row[pred]), 'scores': row.tolist()} for label, pred, row in zip(labels, predicted, scores)],
+    }
 
 
 def save_labels(class_to_idx, output_path='labels.txt'):
@@ -598,9 +594,13 @@ def plot_confusion_matrix(matrix, class_names):
 
 def main():
     """Ejecuta de forma reproducible las ocho fases del entrenamiento."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--export-only', action='store_true', help='Reexporta el checkpoint seleccionado sin reentrenar.')
+    args = parser.parse_args()
     # Semillas fijas facilitan comparar experimentos con la misma configuración.
-    np.random.seed(RANDOM_STATE)
-    tf.random.set_seed(RANDOM_STATE)
+    keras.utils.set_random_seed(RANDOM_STATE)
+    tf.config.threading.set_intra_op_parallelism_threads(4)
+    tf.config.threading.set_inter_op_parallelism_threads(2)
 
     logger.info("=" * 60)
     logger.info("ENTRENAMIENTO DE MODELO - LAB INSTRUMENT IDENTIFIER")
@@ -616,8 +616,7 @@ def main():
     X, y, split_names = loader.load_dataset()
 
     if X is None:
-        logger.error("No se pudo cargar el dataset. Abortando.")
-        return
+        raise RuntimeError('No se pudo cargar el dataset')
 
     loader.validate_data(X, y)
 
@@ -634,6 +633,9 @@ def main():
     X_val, y_val = X[validation_mask], y[validation_mask]
     X_test, y_test = X[test_mask], y[test_mask]
 
+    for split_labels in (y_train, y_val, y_test):
+        if set(split_labels.tolist()) != set(range(len(loader.classes))):
+            raise RuntimeError('Cada conjunto debe contener todas las clases')
     logger.info(f"Train: {len(X_train)} | Val: {len(X_val)} | Test: {len(X_test)}")
 
     # ========== FASE 3: CONSTRUIR MODELO ==========
@@ -642,21 +644,56 @@ def main():
     logger.info("█" * 60)
 
     model = InstrumentModel(len(loader.classes))
-    model.build()
+    if args.export_only:
+        selection = json.loads((OUTPUT_DIR / 'training_selection.json').read_text(encoding='utf-8'))
+        checkpoint = OUTPUT_DIR / 'selected_model.keras'
+        if (selection['preprocessing'] != PREPROCESSING or
+            selection['split_sha256'] != hashlib.sha256(SPLIT_MANIFEST_PATH.read_bytes()).hexdigest() or
+            selection['checkpoint_sha256'] != hashlib.sha256(checkpoint.read_bytes()).hexdigest()):
+            raise RuntimeError('El checkpoint no corresponde al dataset y preprocesamiento actuales')
+        model.model = keras.models.load_model(checkpoint)
+        selected_stage = selection['selected_stage']
+        head_loss = selection.get('validation_loss_head')
+        fine_loss = selection.get('validation_loss_fine_tuning')
+    else:
+        model.build()
 
-    # ========== FASE 4: ENTRENAR ==========
-    logger.info("\n" + "█" * 60)
-    logger.info("FASE 4: ENTRENAR MODELO")
-    logger.info("█" * 60)
+        # ========== FASE 4: ENTRENAR ==========
+        logger.info("\n" + "█" * 60)
+        logger.info("FASE 4: ENTRENAR MODELO")
+        logger.info("█" * 60)
 
-    model.train(X_train, y_train, X_val, y_val)
+        model.train(X_train, y_train, X_val, y_val)
 
-    # ========== FASE 5: FINE-TUNE ==========
-    logger.info("\n" + "█" * 60)
-    logger.info("FASE 5: FINE-TUNING")
-    logger.info("█" * 60)
+        # ========== FASE 5: FINE-TUNE ==========
+        logger.info("\n" + "█" * 60)
+        logger.info("FASE 5: FINE-TUNING")
+        logger.info("█" * 60)
 
-    model.fine_tune(X_train, y_train, X_val, y_val)
+        # El ajuste fino solo se conserva si mejora la pérdida de validación.
+        # Nunca se usa test para elegir pesos o hiperparámetros.
+        head_loss = float(model.model.evaluate(X_val, y_val, verbose=0)[0])
+        head_weights = model.model.get_weights()
+        model.fine_tune(X_train, y_train, X_val, y_val)
+        fine_loss = float(model.model.evaluate(X_val, y_val, verbose=0)[0])
+        selected_stage = 'fine_tuning' if fine_loss < head_loss else 'head'
+        if selected_stage == 'head':
+            model.model.set_weights(head_weights)
+        model.model.save(OUTPUT_DIR / 'selected_model.keras')
+        logger.info(f'Modelo elegido por validación: {selected_stage}')
+
+        selection = {
+            'selected_stage': selected_stage,
+            'validation_loss_head': head_loss,
+            'validation_loss_fine_tuning': fine_loss,
+            'preprocessing': PREPROCESSING,
+            'checkpoint_sha256': hashlib.sha256((OUTPUT_DIR / 'selected_model.keras').read_bytes()).hexdigest(),
+            'split_sha256': hashlib.sha256(SPLIT_MANIFEST_PATH.read_bytes()).hexdigest(),
+        }
+        (OUTPUT_DIR / 'training_selection.json').write_text(json.dumps(selection, indent=2), encoding='utf-8')
+        # Conserva las curvas aunque falle posteriormente la conversión.
+        plot_training_history(model.history)
+        (OUTPUT_DIR / 'training_history.json').write_text(json.dumps(model.history.history, indent=2), encoding='utf-8')
 
     # ========== FASE 6: EVALUAR ==========
     logger.info("\n" + "█" * 60)
@@ -671,26 +708,46 @@ def main():
     logger.info("█" * 60)
 
     tflite_path = export_to_tflite(model.model, 'instrument_model.tflite')
-    metrics['tflite_accuracy'] = evaluate_tflite(
-        tflite_path,
-        X_test,
-        y_test,
-    )
-    # Una divergencia superior a dos puntos sugiere un problema de conversión o
-    # cuantización y evita publicar un modelo móvil degradado.
-    if abs(metrics['accuracy'] - metrics['tflite_accuracy']) > 0.02:
-        raise RuntimeError(
-            'La precisión TFLite difiere más de 2 puntos de la de Keras'
-        )
+    # La paridad mide salidas por imagen, no solo dos accuracies que podrían
+    # coincidir aunque ambos modelos se equivoquen en ejemplos diferentes.
+    keras_validation = model.model.predict(X_val, verbose=0)
+    lite_validation = predict_tflite(tflite_path, X_val, len(loader.classes))
+    parity_error = float(np.max(np.abs(keras_validation - lite_validation)))
+    agreement = float(np.mean(keras_validation.argmax(axis=1) == lite_validation.argmax(axis=1)))
+    if parity_error > 0.03 or agreement < 0.95:
+        raise RuntimeError(f'Conversión no equivalente: error={parity_error}, acuerdo={agreement}')
+    lite_test = predict_tflite(tflite_path, X_test, len(loader.classes))
+    metrics['tflite'] = score_predictions(lite_test, y_test, loader.classes)
+    metrics['tflite_accuracy'] = metrics['tflite']['accuracy']
+    metrics['conversion_validation'] = {'max_absolute_error': parity_error, 'top1_agreement': agreement}
+    metrics['validation'] = score_predictions(lite_validation, y_val, loader.classes)
+    for split, key in [('test', 'tflite'), ('validation', 'validation')]:
+        paths = [path for path, assigned in zip(loader.paths, split_names) if assigned == split]
+        for result, path in zip(metrics[key]['samples'], paths):
+            result['path'] = path
+    previous = OUTPUT_DIR / 'previous_runtime' / 'instrument_model.tflite'
+    if previous.exists():
+        metrics['previous_model_on_same_test'] = score_predictions(
+            predict_tflite(previous, X_test, len(loader.classes)), y_test, loader.classes)
+        metrics['previous_model_evaluation_caveat'] = 'El entrenamiento original puede haber visto estas imágenes; comparación descriptiva, no prueba independiente.'
     save_labels(loader.class_to_idx, 'labels.txt')
     save_class_mapping(loader.class_to_idx, 'class_mapping.json')
 
     # ========== FASE 8: VISUALIZAR ==========
-    if model.history:
-        plot_training_history(model.history)
     plot_confusion_matrix(metrics['confusion_matrix'], loader.classes)
     evaluation = {
         'generated_at': datetime.now().isoformat(),
+        'preprocessing': PREPROCESSING,
+        'weight_storage': 'float16',
+        'selected_stage': selected_stage,
+        'validation_loss_head': head_loss,
+        'validation_loss_fine_tuning': fine_loss,
+        'tensorflow_version': tf.__version__,
+        'python_version': platform.python_version(),
+        'seed': RANDOM_STATE,
+        'model_sha256': hashlib.sha256(tflite_path.read_bytes()).hexdigest(),
+        'labels_sha256': hashlib.sha256((OUTPUT_DIR / 'labels.txt').read_bytes()).hexdigest(),
+        'split_manifest_sha256': hashlib.sha256(SPLIT_MANIFEST_PATH.read_bytes()).hexdigest(),
         'dataset_images': int(len(X)),
         'split_counts': {
             'train': int(len(X_train)),

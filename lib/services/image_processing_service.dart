@@ -122,8 +122,8 @@ class ImageProcessingService {
       }
       final image = img.bakeOrientation(decodedImage);
 
-      // El modelo necesita al menos 224 píxeles por lado para obtener una
-      // entrada útil antes del redimensionamiento.
+      // Política de calidad de la aplicación para evitar ampliar imágenes pequeñas.
+      // No es una restricción del decodificador ni una garantía de precisión.
       if (image.width < 224 || image.height < 224) {
         return ImageValidationResult(
           isValid: false,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_palette.dart';
 
 /// Sistema visual compartido por todas las pantallas de CUAC.
 ///
@@ -164,6 +165,102 @@ class AppTheme {
       color: darkColorScheme.surfaceContainerLow,
     ),
   );
+
+  /// Aplica una paleta sin alterar el modo de luminosidad elegido por el usuario.
+  /// Los tonos extremos se reservan para texto y fondos; los intermedios se usan
+  /// en contenedores y bordes. Los estados de error conservan su significado.
+  static ThemeData forPalette(AppPalette palette, Brightness brightness) {
+    final base = brightness == Brightness.dark ? darkTheme : lightTheme;
+    if (palette == AppPalette.original) return base;
+    final dark = brightness == Brightness.dark;
+    final colors = palette.colors;
+    final foreground = dark ? colors[4] : colors[0];
+    final background = dark ? colors[0] : colors[4];
+    final primary = dark ? colors[3] : colors[1];
+    final onPrimary = dark ? colors[0] : colors[4];
+    final panel =
+        Color.lerp(background, dark ? colors[1] : Colors.white, 0.35)!;
+    final scheme = ColorScheme.fromSeed(
+      seedColor: colors[2],
+      brightness: brightness,
+    ).copyWith(
+      primary: primary,
+      onPrimary: onPrimary,
+      primaryContainer: dark ? colors[1] : colors[3],
+      onPrimaryContainer: foreground,
+      secondary: primary,
+      onSecondary: onPrimary,
+      secondaryContainer: dark ? colors[1] : colors[3],
+      onSecondaryContainer: foreground,
+      tertiary: primary,
+      onTertiary: onPrimary,
+      surface: background,
+      onSurface: foreground,
+      onSurfaceVariant: foreground,
+      surfaceContainerLowest: background,
+      surfaceContainerLow: panel,
+      surfaceContainer: panel,
+      surfaceContainerHigh: Color.lerp(background, colors[2], 0.18),
+      surfaceContainerHighest: Color.lerp(background, colors[2], 0.25),
+      outline: colors[2],
+      outlineVariant: Color.lerp(background, colors[2], 0.5),
+      inverseSurface: foreground,
+      onInverseSurface: background,
+      inversePrimary: dark ? colors[1] : colors[3],
+      surfaceTint: colors[2],
+    );
+    // copyWith conserva tamaños y tipografías existentes; se sustituyen también
+    // los estilos que antes fijaban el azul original fuera del ColorScheme.
+    return base.copyWith(
+      colorScheme: scheme,
+      primaryColor: scheme.primary,
+      dividerColor: scheme.outlineVariant,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: primary,
+        selectionColor: primary.withValues(alpha: 0.25),
+        selectionHandleColor: primary,
+      ),
+      scaffoldBackgroundColor: scheme.surface,
+      textTheme:
+          base.textTheme.apply(bodyColor: foreground, displayColor: foreground),
+      appBarTheme: base.appBarTheme.copyWith(
+        backgroundColor: scheme.surface,
+        foregroundColor: foreground,
+        titleTextStyle:
+            base.appBarTheme.titleTextStyle?.copyWith(color: foreground),
+      ),
+      cardTheme: base.cardTheme.copyWith(color: panel),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: (base.elevatedButtonTheme.style ?? const ButtonStyle()).copyWith(
+          backgroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.disabled)
+                  ? foreground.withValues(alpha: 0.12)
+                  : primary),
+          foregroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.disabled)
+                  ? foreground.withValues(alpha: 0.38)
+                  : onPrimary),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+        foregroundColor: primary,
+        side: BorderSide(color: primary),
+      )),
+      inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        fillColor: panel,
+        labelStyle: TextStyle(color: foreground),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: scheme.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: primary, width: 2),
+        ),
+      ),
+    );
+  }
 
   /// Escala tipográfica para superficies claras.
   ///

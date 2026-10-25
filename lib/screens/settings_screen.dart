@@ -8,6 +8,9 @@ import 'package:go_router/go_router.dart';
 import '../config/app_config.dart';
 import '../providers/providers.dart';
 import '../providers/theme_provider.dart';
+import '../providers/palette_provider.dart';
+import '../config/app_palette.dart';
+import '../widgets/palette_options.dart';
 
 /// Centro de información y configuración de CUAC.
 ///
@@ -21,6 +24,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = _SettingsPalette.of(context);
     final themeMode = ref.watch(themeModeProvider);
+    final selectedPalette = ref.watch(paletteProvider);
 
     // Mantiene las barras del sistema integradas con el tema activo y conserva
     // el contraste de sus iconos tanto en modo claro como en modo oscuro.
@@ -56,8 +60,9 @@ class SettingsScreen extends ConsumerWidget {
                       palette: palette,
                       icon: Icons.brightness_6_outlined,
                       title: 'Apariencia',
-                      subtitle:
-                          'Tema ${_themeModeLabel(themeMode).toLowerCase()}',
+                      subtitle: selectedPalette == AppPalette.original
+                          ? 'Tema ${_themeModeLabel(themeMode).toLowerCase()}'
+                          : '${selectedPalette.label} · ${_themeModeLabel(themeMode)}',
                       onTap: () => _showThemeOptions(context),
                     ),
                     _SettingsCard(
@@ -144,77 +149,68 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  /// Presenta las tres fuentes de apariencia disponibles para toda la app.
-  ///
-  /// «Sistema» sigue automáticamente la configuración del dispositivo. Las
-  /// opciones clara y oscura la reemplazan hasta que el usuario vuelva a elegir
-  /// el comportamiento automático.
+  /// Permite elegir luminosidad y paleta por separado. La hoja es desplazable
+  /// para que las opciones sigan accesibles en pantallas pequeñas o texto grande.
   Future<void> _showThemeOptions(BuildContext context) {
     return showModalBottomSheet<void>(
       context: context,
       useSafeArea: true,
       showDragHandle: true,
+      isScrollControlled: true,
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.88),
       builder: (sheetContext) => Consumer(
         builder: (context, ref, child) {
           final palette = _SettingsPalette.of(context);
           final selectedMode = ref.watch(themeModeProvider);
-
           return ColoredBox(
             color: palette.panel,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 12),
-                    child: Text(
-                      'Tema de la aplicación',
-                      style: TextStyle(
-                        color: palette.primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 4, 8, 12),
+                      child: Text('Tema de la aplicación',
+                          style: TextStyle(
+                            color: palette.primaryText,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          )),
                     ),
-                  ),
-                  _ThemeOption(
-                    palette: palette,
-                    icon: Icons.brightness_auto_outlined,
-                    title: 'Sistema',
-                    subtitle: 'Usa el tema configurado en tu dispositivo',
-                    selected: selectedMode == ThemeMode.system,
-                    onTap: () => _applyTheme(
-                      sheetContext,
-                      ref,
-                      ThemeMode.system,
+                    _ThemeOption(
+                      palette: palette,
+                      icon: Icons.brightness_auto_outlined,
+                      title: 'Sistema',
+                      subtitle: 'Usa el tema configurado en tu dispositivo',
+                      selected: selectedMode == ThemeMode.system,
+                      onTap: () =>
+                          _applyTheme(sheetContext, ref, ThemeMode.system),
                     ),
-                  ),
-                  _ThemeOption(
-                    palette: palette,
-                    icon: Icons.light_mode_outlined,
-                    title: 'Claro',
-                    subtitle: 'Usa fondos claros de forma permanente',
-                    selected: selectedMode == ThemeMode.light,
-                    onTap: () => _applyTheme(
-                      sheetContext,
-                      ref,
-                      ThemeMode.light,
+                    _ThemeOption(
+                      palette: palette,
+                      icon: Icons.light_mode_outlined,
+                      title: 'Claro',
+                      subtitle: 'Usa fondos claros de forma permanente',
+                      selected: selectedMode == ThemeMode.light,
+                      onTap: () =>
+                          _applyTheme(sheetContext, ref, ThemeMode.light),
                     ),
-                  ),
-                  _ThemeOption(
-                    palette: palette,
-                    icon: Icons.dark_mode_outlined,
-                    title: 'Oscuro',
-                    subtitle: 'Usa fondos oscuros de forma permanente',
-                    selected: selectedMode == ThemeMode.dark,
-                    onTap: () => _applyTheme(
-                      sheetContext,
-                      ref,
-                      ThemeMode.dark,
+                    _ThemeOption(
+                      palette: palette,
+                      icon: Icons.dark_mode_outlined,
+                      title: 'Oscuro',
+                      subtitle: 'Usa fondos oscuros de forma permanente',
+                      selected: selectedMode == ThemeMode.dark,
+                      onTap: () =>
+                          _applyTheme(sheetContext, ref, ThemeMode.dark),
                     ),
-                  ),
-                ],
+                    const PaletteOptions(),
+                  ],
+                ),
               ),
             ),
           );
@@ -286,7 +282,7 @@ class SettingsScreen extends ConsumerWidget {
           style: TextStyle(color: palette.primaryText),
         ),
         content: Text(
-          'CUAC utiliza la cámara únicamente para capturar el instrumento que '
+          'LABSTER utiliza la cámara únicamente para capturar el instrumento que '
           'quieres identificar. Puedes revisar o cambiar el permiso desde los '
           'ajustes del dispositivo.',
           style: TextStyle(color: palette.secondaryText, height: 1.5),
@@ -328,7 +324,7 @@ class SettingsScreen extends ConsumerWidget {
         Text(
           'Las imágenes, resultados, favoritos y notas se almacenan '
           'únicamente en este dispositivo. El reconocimiento se ejecuta de '
-          'forma local y CUAC no envía tus capturas a servidores externos.',
+          'forma local y LABSTER no envía tus capturas a servidores externos.',
           style: TextStyle(color: palette.secondaryText, height: 1.55),
         ),
       ],
@@ -412,7 +408,7 @@ class SettingsScreen extends ConsumerWidget {
       icon: Icons.fact_check_outlined,
       children: [
         Text(
-          'CUAC es una herramienta educativa de apoyo. Las identificaciones '
+          'LABSTER es una herramienta educativa de apoyo. Las identificaciones '
           'pueden contener errores y deben verificarse visualmente antes de '
           'tomar decisiones de seguridad o manipular material de laboratorio.',
           style: TextStyle(color: palette.secondaryText, height: 1.55),
@@ -438,7 +434,7 @@ class SettingsScreen extends ConsumerWidget {
     final palette = _SettingsPalette.of(context);
     return _showInfoDialog(
       context,
-      title: 'Acerca de CUAC',
+      title: 'Acerca de LABSTER',
       icon: Icons.info_outline,
       children: [
         Text(
