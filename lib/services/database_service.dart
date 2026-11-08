@@ -4,6 +4,7 @@ import '../models/scan_history.dart';
 import '../models/prediction.dart';
 import '../config/app_config.dart';
 import 'dart:convert';
+import '../models/educational_instrument.dart';
 
 /// Administra la persistencia local del historial mediante SQLite.
 ///
@@ -35,6 +36,9 @@ class DatabaseService {
       path,
       version: AppConfig.databaseVersion,
       onCreate: _createTables,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) await _addCatalogColumns(db);
+      },
     );
   }
 
@@ -69,6 +73,8 @@ class DatabaseService {
       )
     ''');
 
+    await _addCatalogColumns(db);
+
     // Índices de los filtros y ordenamientos usados con mayor frecuencia.
     await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_timestamp ON scan_history(timestamp DESC)');
@@ -79,6 +85,65 @@ class DatabaseService {
   }
 
   // Operaciones de historial
+
+  /// Amplía la tabla existente sin reconstruirla ni modificar los escaneos.
+  /// Los registros antiguos conservan su ID y admiten columnas nuevas nulas.
+  Future<void> _addCatalogColumns(Database db) async {
+    await db.execute('ALTER TABLE instruments ADD COLUMN catalog_key TEXT');
+    await db
+        .execute('ALTER TABLE instruments ADD COLUMN educational_json TEXT');
+    await db.execute(
+        'CREATE UNIQUE INDEX idx_catalog_key ON instruments(catalog_key)');
+  }
+
+  /// Instala un lote atómicamente. No reemplaza filas antiguas ni borra datos.
+  /// El nombre y la clave deben señalar la misma ficha; una colisión se informa
+  /// como error para que no se sobreescriba silenciosamente otro instrumento.
+  Future<void> installCatalog(List<EducationalInstrument> items) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      for (final item in items) {
+        final rows = await txn.query('instruments',
+            where: 'catalog_key = ? OR name = ?',
+            whereArgs: [item.id, item.name]);
+        final encoded = jsonEncode(item.toJson());
+        if (rows.isEmpty) {
+          await txn.insert('instruments', {
+            'name': item.name,
+            'category': item.category,
+            'description': item.description,
+            'usage': item.steps.join('\n'),
+            'safety_info': item.safety.join('\n'),
+            'catalog_key': item.id,
+            'educational_json': encoded
+          });
+        } else {
+          if (rows.length != 1 ||
+              (rows.single['catalog_key'] != null &&
+                  rows.single['catalog_key'] != item.id)) {
+            throw StateError('Conflicto en el catálogo: ${item.id}');
+          }
+          // Conserva las columnas antiguas y actualiza solo el contenido educativo.
+          await txn.update('instruments',
+              {'catalog_key': item.id, 'educational_json': encoded},
+              where: 'id = ?', whereArgs: [rows.single['id']]);
+        }
+      }
+    });
+  }
+
+  /// Recupera únicamente fichas educativas completas; no interpreta registros
+  /// de catálogo antiguos como si ya tuvieran contenido verificado.
+  Future<List<EducationalInstrument>> getCatalog() async {
+    final db = await database;
+    final rows = await db.query('instruments',
+        where: 'educational_json IS NOT NULL', orderBy: 'name COLLATE NOCASE');
+    return rows
+        .map((row) => EducationalInstrument.fromJson(
+            jsonDecode(row['educational_json'] as String)
+                as Map<String, dynamic>))
+        .toList();
+  }
 
   /// Inserta un escaneo y devuelve su identificador.
   ///

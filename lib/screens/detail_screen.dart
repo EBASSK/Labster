@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../widgets/scan_instrument_link.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -131,6 +132,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
 
             // Resultado principal y porcentaje de confianza.
             _buildPredictionSection(scan),
+            ScanInstrumentLink(label: scan.predictedInstrument),
 
             const SizedBox(height: AppTheme.paddingLG),
 

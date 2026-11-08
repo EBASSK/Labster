@@ -140,6 +140,10 @@ void main() {
     expect(find.text('Reconocimiento'), findsOneWidget);
     expect(find.text('Cámara y permisos'), findsOneWidget);
     expect(find.text('Datos y privacidad'), findsOneWidget);
+    // El catálogo añade una tarjeta; las opciones inferiores siguen accesibles
+    // al desplazarse, sin asumir que todas caben en el primer viewport.
+    await tester.scrollUntilVisible(find.text('Información técnica'), 200,
+        scrollable: find.byType(Scrollable));
     expect(find.text('Información técnica'), findsOneWidget);
 
     await tester.scrollUntilVisible(

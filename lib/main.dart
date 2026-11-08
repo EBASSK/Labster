@@ -13,6 +13,8 @@ import 'screens/results_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/detail_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/catalog_screen.dart';
+import 'screens/instrument_screen.dart';
 import 'services/theme_preferences_service.dart';
 
 Future<void> main() async {
@@ -64,6 +66,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       // antes de habilitar el flujo principal de captura.
       initialLocation: '/',
       routes: [
+        GoRoute(
+            path: '/catalog',
+            builder: (context, state) => const CatalogScreen()),
+        GoRoute(
+            path: '/catalog/:id',
+            builder: (context, state) =>
+                InstrumentScreen(instrumentId: state.pathParameters['id']!)),
         // Inicialización del modelo local y transición hacia la cámara.
         GoRoute(
           path: '/',

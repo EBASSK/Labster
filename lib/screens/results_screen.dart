@@ -5,6 +5,7 @@ import '../providers/providers.dart';
 import '../models/prediction.dart';
 import '../config/theme.dart';
 import '../config/app_config.dart';
+import '../widgets/scan_instrument_link.dart';
 
 /// Presenta el estado y los resultados de la clasificación de una captura.
 ///
@@ -350,6 +351,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
 
           const SizedBox(height: AppTheme.paddingMD),
 
+          ScanInstrumentLink(label: topPrediction.name),
           // Este 0.7 es solo el umbral visual para mostrar consejos; es
           // independiente del umbral de confianza configurado para el resultado.
           if (topPrediction.confidence < 0.7) _buildTipsCard(context),

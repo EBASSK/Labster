@@ -1,0 +1,707 @@
+[
+  {
+    "id": "spectrophotometer",
+    "name": "Espectrofotómetro",
+    "englishName": "UV-visible spectrophotometer",
+    "category": "Óptica",
+    "description": "Mide la luz absorbida o transmitida por una muestra a una longitud de onda seleccionada. Permite estudiar sustancias en disolución.",
+    "principle": "Compara la intensidad de luz antes y después de atravesar la muestra. En condiciones adecuadas, la absorbancia se relaciona con la concentración mediante una calibración.",
+    "parts": [
+      "Fuente luminosa: proporciona radiación.",
+      "Selector de longitud de onda y cubeta: definen la luz y alojan la muestra.",
+      "Detector: convierte la luz recibida en una señal."
+    ],
+    "steps": [
+      "Selecciona la longitud de onda indicada por el método.",
+      "Prepara un blanco apropiado y ajusta la referencia.",
+      "Introduce la cubeta limpia, sin burbujas; mide y registra la absorbancia."
+    ],
+    "applications": [
+      "Cuantificación de disoluciones coloreadas.",
+      "Seguimiento de reacciones."
+    ],
+    "safety": [
+      "Utiliza cubetas compatibles y evita tocar las caras ópticas.",
+      "No abras compartimentos ópticos ni anules protecciones; sigue el manual y las normas de manejo de reactivos."
+    ],
+    "sourceName": "Idaho State University — Spectrophotometers",
+    "sourceUrl": "https://www.isu.edu/biology/biolab/instructor-training/technology/spectrophotometers/",
+    "video": {
+      "id": "pxC6F7bK8CU",
+      "title": "How does a spectrophotometer work?",
+      "channel": "BioNetwork",
+      "checkedOn": "2026-11-07",
+      "note": "Animación del principio de funcionamiento; en inglés."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/spectrophotometer.jpg",
+      "author": "Skorpion87",
+      "license": "Public domain",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Spektrofotometri.jpg",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/File:Spektrofotometri.jpg",
+      "title": "Spektrofotometri.jpg"
+    }
+  },
+  {
+    "id": "centrifuge",
+    "name": "Centrífuga de laboratorio",
+    "englishName": "Laboratory centrifuge",
+    "category": "Separación",
+    "description": "Separa componentes de una suspensión mediante rotación rápida.",
+    "principle": "La rotación acelera la sedimentación. La separación depende de las partículas, el medio y la fuerza centrífuga relativa, que depende del radio y de la velocidad; rpm y ×g no son equivalentes.",
+    "parts": [
+      "Rotor: sostiene tubos o adaptadores.",
+      "Motor: genera la rotación.",
+      "Tapa con bloqueo y controles: limitan el acceso y permiten configurar el ciclo."
+    ],
+    "steps": [
+      "Inspecciona rotor, tubos y adaptadores compatibles.",
+      "Equilibra las cargas por masa y distribúyelas simétricamente según el manual.",
+      "Cierra correctamente y selecciona fuerza y tiempo del protocolo.",
+      "Espera la detención completa antes de retirar los tubos."
+    ],
+    "applications": [
+      "Separación de sedimentos y sobrenadantes.",
+      "Preparación de muestras."
+    ],
+    "safety": [
+      "No excedas los límites de tubos y rotor ni abras durante el giro.",
+      "Ante vibraciones anormales, detén el equipo siguiendo el manual. Las muestras biológicas requieren contención y capacitación adecuadas."
+    ],
+    "sourceName": "Eppendorf — Centrifuge Safety",
+    "sourceUrl": "https://www.eppendorf.com/ch-en/lab-academy/life-science/cell-biology/centrifuge-safety/",
+    "video": {
+      "id": "THkhODsTjxY",
+      "title": "How do you use a Centrifuge? A step-by-step guide!",
+      "channel": "YouTooBio",
+      "checkedOn": "2026-11-07",
+      "note": "Demostración de una microcentrífuga; en inglés. Sigue los límites del rotor y el protocolo de tu equipo."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/centrifuge.jpg",
+      "author": "Ivangiesen",
+      "license": "CC0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Centrifuge_in_Laboratory_1.jpg",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "title": "Centrifuge in Laboratory 1.jpg"
+    }
+  },
+  {
+    "id": "autoclave",
+    "name": "Autoclave",
+    "englishName": "Steam sterilizer",
+    "category": "Esterilización",
+    "description": "Esteriliza materiales compatibles mediante vapor de agua en una cámara presurizada.",
+    "principle": "El vapor transmite calor al condensarse. La presión permite alcanzar temperaturas superiores a la ebullición a presión atmosférica; la presión por sí sola no esteriliza.",
+    "parts": [
+      "Cámara y puerta bloqueada: contienen la carga.",
+      "Sistema de vapor y drenaje: suministra vapor y evacua condensados.",
+      "Sensores y controlador: supervisan el ciclo."
+    ],
+    "steps": [
+      "Con capacitación, comprueba compatibilidad y preparación de la carga.",
+      "Selecciona un ciclo validado para ese material según el protocolo.",
+      "Comprueba los controles e indicadores exigidos antes de liberar la carga."
+    ],
+    "applications": [
+      "Esterilización de material compatible.",
+      "Tratamiento de determinadas cargas de laboratorio bajo protocolos validados."
+    ],
+    "safety": [
+      "No introduzcas recipientes herméticos, disolventes o sustancias incompatibles.",
+      "No fuerces la puerta: espera presión segura y enfriamiento según el manual. Usa protección frente a vapor y calor. No existe un tiempo universal válido para toda carga."
+    ],
+    "sourceName": "Tuttnauer — How Does an Autoclave Work?",
+    "sourceUrl": "https://tuttnauer.co.uk/knowledge-center/sterile-processing/autoclave/how-does-an-autoclave-work",
+    "video": {
+      "id": "0dlDf8HiiQw",
+      "title": "How to Use an Autoclave",
+      "channel": "BioNetwork",
+      "note": "Demostración de uso; en inglés. Los ciclos dependen de la carga y del equipo: sigue el manual y la capacitación del laboratorio.",
+      "checkedOn": "2026-11-07"
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/autoclave.jpg",
+      "author": "real name: Nadina Wiórkiewicz\npl.wiki: Nadine90\ncommons: Nadine90",
+      "license": "CC BY-SA 3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Laboratory_autoclave_(cropped).jpg",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "title": "Laboratory autoclave (cropped).jpg"
+    }
+  },
+  {
+    "id": "incubator",
+    "name": "Incubadora de laboratorio",
+    "englishName": "Laboratory incubator",
+    "category": "Control térmico",
+    "description": "Mantiene muestras en una cámara con temperatura controlada durante un período definido.",
+    "principle": "Un sensor compara la temperatura con la consigna y un controlador regula la calefacción. Algunos modelos también enfrían o controlan gases; esas funciones no son universales.",
+    "parts": [
+      "Cámara y bandejas: alojan muestras.",
+      "Sensor y controlador: regulan la temperatura.",
+      "Calefacción y circulación de aire: distribuyen calor, según el modelo."
+    ],
+    "steps": [
+      "Revisa limpieza y selecciona la temperatura del protocolo.",
+      "Espera la estabilización y coloca recipientes permitiendo la circulación de aire.",
+      "Registra tiempo y condiciones; limita las aperturas de puerta."
+    ],
+    "applications": [
+      "Ensayos de estabilidad a temperatura controlada.",
+      "Incubación de cultivos autorizados en laboratorios preparados."
+    ],
+    "safety": [
+      "No cultives muestras desconocidas sin supervisión y medidas de bioseguridad.",
+      "No introduzcas materiales inflamables en equipos no diseñados para ellos. La incubación no esteriliza."
+    ],
+    "sourceName": "Memmert — Incubators",
+    "sourceUrl": "https://www.memmert.com/en/products/incubators",
+    "video": {
+      "id": "IpT63924MpQ",
+      "title": "Operation Memmert Laboratory Ovens",
+      "channel": "Dominique Dutscher",
+      "checkedOn": "2026-11-07",
+      "note": "Controles de equipos Memmert, incluidos hornos e incubadoras; no es una guía universal. En inglés."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/incubator.jpg",
+      "author": "Shinryuu",
+      "license": "Public domain",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Binder_CB_210_incubator_interior.jpg",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/File:Binder_CB_210_incubator_interior.jpg",
+      "title": "Binder CB 210 incubator interior.jpg"
+    }
+  },
+  {
+    "id": "analytical_balance",
+    "name": "Balanza analítica",
+    "englishName": "Analytical balance",
+    "category": "Medición",
+    "description": "Determina masas pequeñas con alta resolución en condiciones controladas.",
+    "principle": "Muchas balanzas analíticas usan compensación electromagnética para equilibrar la fuerza ejercida por la muestra. La indicación depende de calibración y condiciones ambientales; resolución no equivale a exactitud.",
+    "parts": [
+      "Platillo: recibe el recipiente de pesada.",
+      "Vitrina: reduce corrientes de aire.",
+      "Sistema de medición, nivel y pantalla: permiten ajustar y leer la masa."
+    ],
+    "steps": [
+      "Comprueba nivelación, limpieza y verificación según el protocolo.",
+      "Coloca el recipiente y tara.",
+      "Añade la muestra, cierra la vitrina y espera estabilidad antes de registrar."
+    ],
+    "applications": [
+      "Preparación de patrones y disoluciones.",
+      "Determinación de masas para análisis."
+    ],
+    "safety": [
+      "No excedas la capacidad ni pongas reactivos directamente sobre el platillo.",
+      "Evita muestras calientes y vibraciones; controla sustancias volátiles con el equipo y procedimiento apropiados."
+    ],
+    "sourceName": "METTLER TOLEDO — Analytical Balances",
+    "sourceUrl": "https://www.mt.com/us/en/home/products/Laboratory_Weighing_Solutions/analytical-balances.html",
+    "video": {
+      "id": "mmgiehwrK54",
+      "title": "How to Use an Analytical Balance",
+      "channel": "BioNetwork",
+      "checkedOn": "2026-11-07",
+      "note": "Demostración de pesada con balanza analítica; en inglés."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/analytical_balance.jpg",
+      "author": "US DEA",
+      "license": "Public domain",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+      "title": "Analytical balance mettler ae-260.jpg"
+    }
+  },
+  {
+    "id": "ph_meter",
+    "name": "Medidor de pH",
+    "englishName": "pH meter",
+    "category": "Electroquímica",
+    "description": "Mide el pH para describir la acidez o basicidad de una muestra compatible con el electrodo.",
+    "principle": "Un electrodo sensible al hidrógeno y una referencia producen una diferencia de potencial. El medidor la convierte a pH mediante calibración; la temperatura influye en la medida.",
+    "parts": [
+      "Electrodo de vidrio y referencia: generan la señal.",
+      "Medidor: procesa y muestra el pH.",
+      "Sonda de temperatura: permite considerar su efecto."
+    ],
+    "steps": [
+      "Acondiciona el electrodo y calibra con tampones frescos que abarquen el pH esperado.",
+      "Enjuaga entre soluciones y retira suavemente el exceso de agua.",
+      "Sumerge según el manual y espera estabilidad; registra pH y temperatura."
+    ],
+    "applications": [
+      "Control de agua y disoluciones.",
+      "Preparación de medios y tampones."
+    ],
+    "safety": [
+      "El bulbo de vidrio es frágil: evita golpes y muestras incompatibles.",
+      "Conserva el electrodo en la solución indicada por el fabricante; no lo almacenes en agua destilada."
+    ],
+    "sourceName": "Hanna Instruments — How do I calibrate my pH electrode?",
+    "sourceUrl": "https://knowledge.hannainst.com/en/knowledge/generalized-calibration-ph-electrode-meter",
+    "video": {
+      "id": "5HYTDsFmLGE",
+      "title": "Hanna pH tester calibration",
+      "channel": "Cannon Water Technology",
+      "checkedOn": "2026-11-07",
+      "note": "Calibración de un medidor Hanna; en inglés. Usa el procedimiento indicado para tu electrodo."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/ph_meter.jpg",
+      "author": "Vis M",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:PH_meter_2014.jpg",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "title": "PH meter 2014.jpg"
+    }
+  },
+  {
+    "id": "magnetic_stirrer",
+    "name": "Agitador magnético",
+    "englishName": "Magnetic stirrer",
+    "category": "Mezcla",
+    "description": "Mezcla líquidos mediante una barra magnética dentro del recipiente. Algunos modelos incorporan calefacción.",
+    "principle": "Un campo magnético giratorio arrastra la barra y genera movimiento en el líquido. Una velocidad excesiva puede desacoplar la barra o producir salpicaduras.",
+    "parts": [
+      "Base: genera el campo giratorio.",
+      "Barra recubierta: agita la muestra.",
+      "Control de velocidad y, si existe, placa calefactora: ajustan las condiciones."
+    ],
+    "steps": [
+      "Selecciona recipiente y barra compatibles con la muestra.",
+      "Centra el recipiente y empieza a baja velocidad.",
+      "Ajusta gradualmente hasta obtener mezcla estable; detén antes de retirar el recipiente."
+    ],
+    "applications": [
+      "Disolución de sólidos.",
+      "Homogeneización de disoluciones."
+    ],
+    "safety": [
+      "Evita salpicaduras y comprueba la compatibilidad química de la barra.",
+      "Una placa apagada puede seguir caliente. No uses disolventes inflamables sin equipos y controles adecuados."
+    ],
+    "sourceName": "IKA — Magnetic Stirrers",
+    "sourceUrl": "https://www.ika.com/en/Products-LabEq/Magnetic-Stirrers-pg188/",
+    "video": {
+      "id": "mW9-3FCCvec",
+      "title": "How to Use a Digital Magnetic Stirrer with Hot Plate | Step-by-Step Lab Guide",
+      "channel": "Md. Hasinul Babu",
+      "note": "Guía de un agitador con placa calefactora. Recurso complementario de un creador independiente; aplica el manual de tu equipo y evita calentar sustancias incompatibles.",
+      "checkedOn": "2026-11-07"
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/magnetic_stirrer.jpg",
+      "author": "Lucasbosch",
+      "license": "CC BY-SA 3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:RCT_basic_IKAMAG%C2%AE_safety_control_magnetic_stirrer.jpg",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "title": "RCT basic IKAMAG® safety control magnetic stirrer.jpg"
+    }
+  },
+  {
+    "id": "water_bath",
+    "name": "Baño María de laboratorio",
+    "englishName": "Laboratory water bath",
+    "category": "Control térmico",
+    "description": "Calienta o mantiene muestras a temperatura controlada mediante un baño de agua.",
+    "principle": "La resistencia calienta el agua y esta transfiere calor a los recipientes. El controlador regula la temperatura usando un sensor; la uniformidad depende de carga y diseño.",
+    "parts": [
+      "Cubeta: contiene agua.",
+      "Resistencia, sensor y controlador: regulan el calentamiento.",
+      "Gradilla y tapa: sostienen recipientes y reducen evaporación."
+    ],
+    "steps": [
+      "Llena con el agua y nivel indicados por el fabricante.",
+      "Ajusta la consigna y comprueba la estabilización.",
+      "Coloca recipientes compatibles sin derramar muestras; controla nivel y tiempo."
+    ],
+    "applications": [
+      "Templado de reactivos.",
+      "Incubaciones cortas de reacciones."
+    ],
+    "safety": [
+      "Evita quemaduras por agua, superficies y vapor.",
+      "No operes en seco ni sumerjas partes eléctricas. Limpia siguiendo el protocolo para prevenir contaminación."
+    ],
+    "sourceName": "Memmert — Water baths",
+    "sourceUrl": "https://www.memmert.com/en/products/water-baths",
+    "video": {
+      "id": "sgg7WaGQEHQ",
+      "title": "Water Baths - Intro to the Lab Bench",
+      "channel": "Addgene",
+      "checkedOn": "2026-11-07",
+      "note": "En inglés. Preparación, uso y cuidado del baño de agua; sigue el manual de tu equipo."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/water_bath.jpg",
+      "author": "QuodScripsiScripsi",
+      "license": "CC0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Laboratory_water_bath.jpg",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "title": "Laboratory water bath.jpg"
+    }
+  },
+  {
+    "id": "refractometer",
+    "name": "Refractómetro",
+    "englishName": "Refractometer",
+    "category": "Óptica",
+    "description": "Mide el índice de refracción de una muestra. Puede expresar escalas de concentración cuando existe una relación apropiada para esa mezcla.",
+    "principle": "Analiza el comportamiento de la luz en la interfaz entre prisma y muestra. El índice depende de composición y temperatura; una lectura Brix no identifica por sí sola todos los solutos.",
+    "parts": [
+      "Prisma: contacta con la muestra.",
+      "Sistema óptico y detector u ocular: permiten obtener la lectura.",
+      "Sensor o control térmico, según modelo: considera la temperatura."
+    ],
+    "steps": [
+      "Limpia y verifica con el patrón indicado.",
+      "Cubre el prisma con muestra homogénea, sin burbujas.",
+      "Espera estabilidad térmica, registra escala y temperatura y limpia el prisma."
+    ],
+    "applications": [
+      "Control de disoluciones azucaradas.",
+      "Comparación de composición en mezclas calibradas."
+    ],
+    "safety": [
+      "No rayes el prisma ni uses limpiadores incompatibles.",
+      "Consulta el manual para muestras corrosivas y evita confundir una escala específica con concentración universal."
+    ],
+    "sourceName": "METTLER TOLEDO — Refractometer",
+    "sourceUrl": "https://www.mt.com/gb/en/home/products/Laboratory_Analytics_Browse/refractometer.html",
+    "video": {
+      "id": "xc_iBpfUfvk",
+      "title": "Easy Bev Refractometer: How to Perform a Measurement",
+      "channel": "METTLER TOLEDO",
+      "checkedOn": "2026-11-07",
+      "note": "Medición con el modelo Easy Bev; en inglés. La escala y el procedimiento dependen del equipo."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/refractometer.jpg",
+      "author": "丰泽一号",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Abbe_Refractometer_in_JXTCM.jpg",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "title": "Abbe Refractometer in JXTCM.jpg"
+    }
+  },
+  {
+    "id": "conductivity_meter",
+    "name": "Conductímetro",
+    "englishName": "Conductivity meter",
+    "category": "Electroquímica",
+    "description": "Mide la capacidad de una disolución para conducir corriente eléctrica, relacionada con sus iones disueltos.",
+    "principle": "Una celda mide la respuesta eléctrica del líquido y el equipo calcula conductividad con su constante de celda. La temperatura influye; el resultado no identifica cada ion presente.",
+    "parts": [
+      "Celda conductimétrica: contacta con la muestra.",
+      "Sensor de temperatura: permite registrar o compensar su efecto.",
+      "Medidor: calcula y presenta la conductividad."
+    ],
+    "steps": [
+      "Limpia y calibra con un patrón fresco adecuado al rango.",
+      "Enjuaga y sumerge hasta la profundidad indicada, sin burbujas atrapadas.",
+      "Espera estabilidad y registra unidades, temperatura y compensación utilizada."
+    ],
+    "applications": [
+      "Control de agua.",
+      "Seguimiento de disoluciones iónicas."
+    ],
+    "safety": [
+      "No dañes los electrodos ni uses muestras incompatibles.",
+      "Evita contaminar los patrones. La conversión a sólidos disueltos es una estimación dependiente de la composición."
+    ],
+    "sourceName": "Hanna Instruments — EC/TDS Probe Maintenance",
+    "sourceUrl": "https://pages.hannainst.com/hubfs/006-finished-content/EC-Guides/electrical-conductivity-ec-tds-probe-maintenance-rev1.pdf",
+    "video": {
+      "id": "aTAhO9NaLFQ",
+      "title": "Video tutorial HANNA: medida, calibración y ajuste del medidor de conductividad - Tester HI98304",
+      "channel": "Hanna Spain",
+      "checkedOn": "2026-11-07",
+      "note": "En español. Medida y calibración del HI98304; consulta el manual de tu modelo."
+    },
+    "photo": {
+      "asset": "assets/catalog/photos/conductivity_meter.jpg",
+      "author": "Sarathkumaran Ranganathan",
+      "license": "CC BY-SA 4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Conductivity_meter.jpg",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "title": "Conductivity meter.jpg"
+    }
+  },
+  {
+    "id": "buretas",
+    "name": "Bureta",
+    "englishName": "Burette",
+    "category": "Dosificación",
+    "description": "Dispensa volúmenes variables de líquido durante una valoración.",
+    "principle": "El volumen entregado se obtiene por diferencia entre las lecturas inicial y final de la escala.",
+    "parts": [
+      "Tubo graduado",
+      "Llave de paso",
+      "Punta de salida"
+    ],
+    "steps": [
+      "Comprueba limpieza y ausencia de fugas.",
+      "Fija verticalmente, acondiciona con la disolución y elimina burbujas de la punta.",
+      "Lee el menisco a la altura de los ojos y registra las lecturas inicial y final."
+    ],
+    "applications": [
+      "Valoraciones volumétricas"
+    ],
+    "safety": [
+      "No fuerces la llave ni pipetees con la boca.",
+      "Utiliza protección ocular y el soporte adecuado."
+    ],
+    "sourceName": "Dartmouth — Techniques and Equipment",
+    "sourceUrl": "https://sites.dartmouth.edu/genchemlab/techniques-and-equipment/"
+  },
+  {
+    "id": "crisoles",
+    "name": "Crisol",
+    "englishName": "Crucible",
+    "category": "Calentamiento",
+    "description": "Recipiente resistente al calor para pequeñas cantidades de sólidos.",
+    "principle": "Su material soporta temperaturas elevadas dentro del intervalo especificado por el fabricante.",
+    "parts": [
+      "Cuerpo refractario",
+      "Base",
+      "Tapa, según diseño"
+    ],
+    "steps": [
+      "Revisa que no presente grietas.",
+      "Coloca la muestra y utiliza un soporte compatible con el calentamiento previsto.",
+      "Deja enfriar según el procedimiento antes de pesar o manipular."
+    ],
+    "applications": [
+      "Calcinación y tratamiento térmico de muestras"
+    ],
+    "safety": [
+      "Usa pinzas adecuadas; un crisol caliente puede parecer frío.",
+      "Evita cambios bruscos de temperatura."
+    ],
+    "sourceName": "ACCESS Virtual Learning — Basic Laboratory Equipment Guide",
+    "sourceUrl": "https://accessdl.state.al.us/AventaCourses/access_courses/physci_ua_v17/01_unit/01-05/01-05_learn_alt.htm"
+  },
+  {
+    "id": "embudos",
+    "name": "Embudo",
+    "englishName": "Funnel",
+    "category": "Transferencia",
+    "description": "Facilita trasvasar líquidos hacia recipientes de boca estrecha.",
+    "principle": "Su sección amplia conduce el líquido a un vástago estrecho; con papel apropiado permite filtrar por gravedad.",
+    "parts": [
+      "Boca",
+      "Cono",
+      "Vástago"
+    ],
+    "steps": [
+      "Selecciona un tamaño y material compatibles con el líquido.",
+      "Apoya el embudo de forma estable sobre el recipiente receptor.",
+      "Vierte lentamente; coloca papel de filtro si necesitas separar un sólido."
+    ],
+    "applications": [
+      "Trasvase de líquidos y filtración por gravedad"
+    ],
+    "safety": [
+      "No llenes hasta el borde.",
+      "No confundas este embudo con uno de decantación o un sistema de filtración al vacío."
+    ],
+    "sourceName": "ACCESS Virtual Learning — Basic Laboratory Equipment Guide",
+    "sourceUrl": "https://accessdl.state.al.us/AventaCourses/access_courses/physci_ua_v17/01_unit/01-05/01-05_learn_alt.htm"
+  },
+  {
+    "id": "gradillas",
+    "name": "Gradilla",
+    "englishName": "Test tube rack",
+    "category": "Organización",
+    "description": "Soporte que mantiene tubos ordenados y estables.",
+    "principle": "Los orificios y apoyos sujetan los tubos y reducen el riesgo de vuelco.",
+    "parts": [
+      "Orificios",
+      "Soportes",
+      "Base"
+    ],
+    "steps": [
+      "Elige una gradilla compatible con el diámetro de los tubos.",
+      "Colócala sobre una superficie estable e introduce los tubos.",
+      "Etiqueta las posiciones y comprueba la estabilidad antes de trasladarla."
+    ],
+    "applications": [
+      "Organización y soporte de muestras"
+    ],
+    "safety": [
+      "No sobrecargues la gradilla.",
+      "Comprueba la compatibilidad del material antes de someterla a calor o desinfectantes."
+    ],
+    "sourceName": "ACCESS Virtual Learning — Basic Laboratory Equipment Guide",
+    "sourceUrl": "https://accessdl.state.al.us/AventaCourses/access_courses/physci_ua_v17/01_unit/01-05/01-05_learn_alt.htm"
+  },
+  {
+    "id": "matraces",
+    "name": "Matraz",
+    "englishName": "Flask",
+    "category": "Contenedores",
+    "description": "Familia de recipientes de cuello estrecho utilizados para contener, mezclar o preparar disoluciones.",
+    "principle": "La forma depende del uso: el Erlenmeyer facilita mezclar; el aforado define un volumen nominal a una temperatura indicada.",
+    "parts": [
+      "Cuerpo",
+      "Cuello",
+      "Base o fondo",
+      "Marca de aforo, cuando corresponda"
+    ],
+    "steps": [
+      "Identifica el tipo de matraz y su capacidad marcada.",
+      "Comprueba que esté limpio e intacto y añade la muestra.",
+      "Mezcla o ajusta al aforo según el método y el tipo de recipiente."
+    ],
+    "applications": [
+      "Preparación de disoluciones y mezcla de líquidos"
+    ],
+    "safety": [
+      "La clase del modelo no distingue con certeza todos los tipos de matraz.",
+      "No calientes material aforado ni cierres herméticamente recipientes durante el calentamiento."
+    ],
+    "sourceName": "UCLA — Common Laboratory Glassware",
+    "sourceUrl": "https://www.chem.ucla.edu/~gchemlab/lab_glassware_web.htm"
+  },
+  {
+    "id": "microscopio",
+    "name": "Microscopio",
+    "englishName": "Microscope",
+    "category": "Óptica",
+    "description": "Instrumento óptico que permite observar detalles pequeños de una muestra.",
+    "principle": "En un microscopio compuesto, el objetivo y el ocular amplían la imagen; el aumento total es su producto.",
+    "parts": [
+      "Ocular",
+      "Objetivos y revólver",
+      "Platina",
+      "Mandos de enfoque",
+      "Iluminación"
+    ],
+    "steps": [
+      "Sitúa el equipo estable y coloca la preparación.",
+      "Comienza con el objetivo de menor aumento y ajusta luz y enfoque.",
+      "Centra la región de interés y usa el enfoque fino al aumentar la magnificación."
+    ],
+    "applications": [
+      "Observación de células y preparaciones microscópicas"
+    ],
+    "safety": [
+      "Evita que el objetivo golpee el portaobjetos.",
+      "Limpia las lentes con material óptico adecuado; usa aceite solo con objetivos compatibles."
+    ],
+    "sourceName": "BioNetwork — Microscopy",
+    "sourceUrl": "https://www.ncbionetwork.org/recommended/microscopy"
+  },
+  {
+    "id": "pinzas",
+    "name": "Pinzas de laboratorio",
+    "englishName": "Laboratory tongs",
+    "category": "Sujeción",
+    "description": "Herramientas para sujetar recipientes, materiales o piezas pequeñas.",
+    "principle": "Los brazos transmiten la fuerza de la mano; la forma de las mordazas determina qué objetos pueden sujetarse.",
+    "parts": [
+      "Brazos",
+      "Zona de agarre",
+      "Mordazas o puntas"
+    ],
+    "steps": [
+      "Selecciona el tipo apropiado para el objeto.",
+      "Comprueba el agarre antes de levantarlo.",
+      "Traslada con cuidado y deposita sobre una superficie adecuada."
+    ],
+    "applications": [
+      "Manipulación y sujeción de material"
+    ],
+    "safety": [
+      "La categoría visual no determina si las pinzas sirven para objetos calientes.",
+      "No aprietes vidrio en exceso ni uses pinzas dañadas."
+    ],
+    "sourceName": "ACCESS Virtual Learning — Basic Laboratory Equipment Guide",
+    "sourceUrl": "https://accessdl.state.al.us/AventaCourses/access_courses/physci_ua_v17/01_unit/01-05/01-05_learn_alt.htm"
+  },
+  {
+    "id": "pipetas",
+    "name": "Pipeta",
+    "englishName": "Pipette",
+    "category": "Medición",
+    "description": "Transfiere cantidades de líquido; su precisión depende del tipo y de la calibración.",
+    "principle": "Un dispositivo de aspiración introduce líquido y permite entregarlo hasta una marca o volumen seleccionado.",
+    "parts": [
+      "Cuerpo o tubo",
+      "Punta",
+      "Escala o marca de aforo, según el tipo"
+    ],
+    "steps": [
+      "Identifica si es graduada, aforada o un dispositivo de volumen ajustable.",
+      "Usa una propipeta o el mecanismo indicado para aspirar sin burbujas.",
+      "Entrega el volumen siguiendo la calibración; no expulses líquido residual salvo que el tipo lo requiera."
+    ],
+    "applications": [
+      "Transferencia de alícuotas y preparación de disoluciones"
+    ],
+    "safety": [
+      "Nunca aspires con la boca.",
+      "Evita contaminación cruzada y respeta la compatibilidad química."
+    ],
+    "sourceName": "Dartmouth — Techniques and Equipment",
+    "sourceUrl": "https://sites.dartmouth.edu/genchemlab/techniques-and-equipment/"
+  },
+  {
+    "id": "probeta",
+    "name": "Probeta",
+    "englishName": "Graduated cylinder",
+    "category": "Medición",
+    "description": "Cilindro graduado para medir volúmenes de líquido.",
+    "principle": "La altura del menisco se compara con las divisiones de una escala volumétrica.",
+    "parts": [
+      "Cilindro graduado",
+      "Base",
+      "Borde de vertido"
+    ],
+    "steps": [
+      "Selecciona una capacidad apropiada.",
+      "Colócala vertical en una superficie horizontal y añade el líquido.",
+      "Lee el menisco a la altura de los ojos y registra la unidad y resolución."
+    ],
+    "applications": [
+      "Medición de volúmenes"
+    ],
+    "safety": [
+      "No la uses para calentar sustancias.",
+      "Para trabajos que exigen mayor exactitud utiliza material volumétrico apropiado."
+    ],
+    "sourceName": "UCLA — Common Laboratory Glassware",
+    "sourceUrl": "https://www.chem.ucla.edu/~gchemlab/lab_glassware_web.htm"
+  },
+  {
+    "id": "vasos_precipitado",
+    "name": "Vaso de precipitado",
+    "englishName": "Beaker",
+    "category": "Contenedores",
+    "description": "Recipiente de boca ancha para contener, mezclar y trasvasar sustancias.",
+    "principle": "La abertura facilita acceso y mezcla; sus graduaciones suelen indicar volúmenes aproximados.",
+    "parts": [
+      "Cuerpo",
+      "Base plana",
+      "Pico de vertido",
+      "Escala aproximada, si existe"
+    ],
+    "steps": [
+      "Comprueba limpieza e integridad.",
+      "Añade la muestra sin llenar excesivamente.",
+      "Mezcla o trasvasa con cuidado y utiliza otro instrumento si necesitas una medida precisa."
+    ],
+    "applications": [
+      "Mezcla y preparación de muestras"
+    ],
+    "safety": [
+      "No lo uses como material volumétrico de precisión.",
+      "Calienta únicamente recipientes aptos y evita choques térmicos."
+    ],
+    "sourceName": "UCLA — Common Laboratory Glassware",
+    "sourceUrl": "https://www.chem.ucla.edu/~gchemlab/lab_glassware_web.htm"
+  }
+]

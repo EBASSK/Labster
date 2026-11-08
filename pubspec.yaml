@@ -22,6 +22,7 @@ dependencies:
   permission_handler: ^12.0.1
   sqflite: ^2.2.0
   tflite_flutter: ^0.12.1
+  url_launcher: 6.3.1
 
 dev_dependencies:
   build_runner: ^2.4.0
@@ -34,6 +35,8 @@ flutter:
   uses-material-design: true
   
   assets:
+    - assets/catalog/instruments.json
+    - assets/catalog/photos/
     - assets/models/instrument_model.tflite
     - assets/models/labels.txt
     - assets/models/model_contract.json

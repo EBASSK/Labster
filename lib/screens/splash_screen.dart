@@ -167,6 +167,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             icon: const Icon(Icons.refresh),
             label: const Text('Reintentar'),
           ),
+          TextButton(
+            onPressed: () => context.go('/catalog'),
+            child: const Text('Consultar catálogo sin cámara',
+                style: TextStyle(color: Colors.white)),
+          ),
         ],
       ),
     );

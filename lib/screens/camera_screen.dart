@@ -461,6 +461,11 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                 tooltip: 'Ajustes',
                 onPressed: () => _openRoute('/settings'),
               ),
+              _CameraIconButton(
+                icon: Icons.menu_book_outlined,
+                tooltip: 'Catálogo educativo',
+                onPressed: () => _openRoute('/catalog'),
+              ),
             ],
           ),
         ),

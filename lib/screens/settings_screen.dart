@@ -58,6 +58,13 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     _SettingsCard(
                       palette: palette,
+                      icon: Icons.menu_book_outlined,
+                      title: 'Catálogo educativo',
+                      subtitle: 'Instrumentos y guías de uso sin conexión',
+                      onTap: () => context.push('/catalog'),
+                    ),
+                    _SettingsCard(
+                      palette: palette,
                       icon: Icons.brightness_6_outlined,
                       title: 'Apariencia',
                       subtitle: selectedPalette == AppPalette.original

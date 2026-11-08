@@ -18,7 +18,7 @@ abstract final class AppConfig {
   // Nombre físico y versión del esquema de la base de datos SQLite local.
   // Incrementar `databaseVersion` requiere definir su migración correspondiente.
   static const String databaseName = 'lab_instruments.db';
-  static const int databaseVersion = 1;
+  static const int databaseVersion = 2;
 
   // Límites utilizados al validar y comprimir las fotografías capturadas.
   static const int maxImageSizeBytes = 5 * 1024 * 1024;
